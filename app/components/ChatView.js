@@ -42,14 +42,17 @@ class ChatView extends Component {
 		this.state = {
 			text: "hello!"
 		}
-	}
-
-	_send() {
-
+		this.ws = new WebSocket('ws://10.0.3.2:3000');
+		this.send = () => {};
+		this.ws.onopen = () => {  // connection opened
+			this.send = () => {
+				this.ws.send(this.state.text)
+				this.setState({text: ""})
+			}
+		};
 	}
 
 	render(){
-
 
 		return (
 	      <View style={styles.container}>
@@ -58,9 +61,9 @@ class ChatView extends Component {
 	        </Text>
 	        <TextInput 
 	         	style={styles.textInput} 
-	         	onChangeText={(text) => this.setState({text})} 
-	         	value={this.state.text} />
-	        <Button onPress={this._send} >Send</Button>
+	         	value={this.state.text} 
+	         	onChangeText={(text) => this.setState({text: text})} />
+	        <Button onPress={this.send} >Send</Button>
 	      </View>
     	);
 	}
